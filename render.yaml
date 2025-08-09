@@ -1,0 +1,26 @@
+
+services:
+  - type: web
+    name: undersold-raffles-backend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      - key: ADMIN_KEY
+        sync: false
+      - key: EXAMPLE_SOURCE_URL
+        sync: false
+cronJobs:
+  - name: import-all-hourly
+    schedule: "0 * * * *"
+    command: 'bash -lc "curl -s -X POST $RENDER_EXTERNAL_URL/jobs/import-all -H \"X-Admin-Key: $ADMIN_KEY\""'
